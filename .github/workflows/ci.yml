@@ -1,0 +1,65 @@
+name: ci
+
+# This repository's checks: its workflows and its Dependabot configuration. Each job runs one
+# tool through uv (`uv tool run`), so the same command works locally.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  actionlint:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: "false"
+
+      - name: actionlint
+        run: uv tool run --from actionlint-py actionlint
+
+  zizmor:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: "false"
+
+      - name: zizmor
+        run: uv tool run zizmor .github
+
+  check-jsonschema:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@v10.3.3
+        with:
+          enable-cache: "false"
+
+      - name: Workflows
+        run: uv tool run check-jsonschema --builtin-schema vendor.github-workflows .github/workflows/*.yml
+
+      - name: Dependabot
+        run: uv tool run check-jsonschema --builtin-schema vendor.dependabot .github/dependabot.yml

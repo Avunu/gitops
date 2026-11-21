@@ -1,0 +1,34 @@
+name: actions-lock
+
+# .github/workflows/actions.lock must match the actions the workflows use. `gh actions-lock
+# --verify` is the frozen check: it fails when an entry is missing or a pin is one the runner
+# would reject. To change the lock, run `gh actions-lock` locally and commit what it writes.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  lockfile:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Install gh-actions-lock
+        run: |
+          if ! gh extension list | grep -q 'github/gh-actions-lock'; then
+            gh extension install github/gh-actions-lock
+          fi
+
+      - name: Verify the lockfile
+        run: gh actions-lock --verify

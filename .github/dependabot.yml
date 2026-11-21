@@ -1,0 +1,17 @@
+version: 2
+
+# GitHub Actions pins in this repository's workflows: weekly, one group, a seven-day cooldown.
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    cooldown:
+      default-days: 7
+    labels:
+      - dependencies
+    commit-message:
+      prefix: "chore(deps)"
+    groups:
+      github-actions:
+        patterns: ["*"]
