@@ -22,7 +22,7 @@ Each copied item was taken from python-devops-nix at `cb0774e`, from its `.githu
 
 ## Using them
 
-Reusable workflows are called by full commit SHA, with the version in a trailing comment, so that Dependabot's github-actions updates move the pin:
+Reusable workflows are called by full commit SHA, with the version in a trailing comment, so that Dependabot's github-actions updates move the pin. An Avunu caller may instead name the release tag itself (`@v1.0.0`), which the org's policy allows for an Avunu reusable workflow; the tag is not locked to a commit.
 
 ```yaml
 jobs:
